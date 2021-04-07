@@ -7,7 +7,13 @@ class NeuralNetwork {
         this.outputs_nodes = numberOfOutputsNodes;
     }
 
-// Next step - Feed Forward Process
-// Working - we recieve inputs. The idea is we do weighted sum. 
+    // Next step - Feed Forward Process
+    feedForward(input) {
+        let guess = 0;
+        // Lots of Matrix Math
+        return guess;   
+    }
+
+    // Working - we recieve inputs. The idea is we do weighted sum. 
 }
 
