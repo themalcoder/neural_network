@@ -36,7 +36,7 @@ class NeuralNetwork {
     // Next step - Feed Forward Process
     // This feedForward function expects an array (of inputs)
     feedForward(input_array) {
-
+        // this function can be used as predictor too... just train the data and call this function on a particluar value and it will give you the predicted output after it got trained (or without training too). Should rename this function to predict() but that I will do that later.
         // Generating Hidden Outputs
         let input = Matrix.fromArray(input_array);
         let hidden = Matrix.multiply(this.weights_ih, input);
