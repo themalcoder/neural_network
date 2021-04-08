@@ -66,10 +66,19 @@ class Matrix {
     }
 
     multiply(n) {
-        // Scalar product
-        for(let i = 0; i < this.rows; i++) {
-            for(let j = 0; j < this.cols; j++) {
-                this.data[i][j] *= n;
+        if(n instanceof Matrix) {
+            // Element wise Matrix Multiplication (Hadamard Product)
+            for(let i = 0; i < this.rows; i++) {
+                for(let j = 0; j < this.cols; j++) {
+                    this.data[i][j] *= n.data[i][j];
+                }
+            }
+        } else {
+            // Scalar Porductt
+            for(let i = 0; i < this.rows; i++) {
+                for(let j = 0; j < this.cols; j++) {
+                    this.data[i][j] *= n;
+                }
             }
         }
     }
@@ -82,6 +91,19 @@ class Matrix {
                 this.data[i][j] = func(val);
             }
         }
+    }
+    
+    static map(matrix, func) {
+        let result = new Matrix(matrix.rows, matrix.cols);
+
+        // Apply a function to every element of matrix
+        for(let i = 0; i < matrix.rows; i++) {
+            for(let j = 0; j < matrix.cols; j++) {
+                let val = matrix.data[i][j];
+                result.data[i][j] = func(val);
+            }
+        } 
+        return result;
     }
 
     static transpose(m) {
@@ -119,5 +141,21 @@ class Matrix {
             }
         }
         return arr;
+    }
+
+    // subtract the matrices
+    static subtract(a, b) {
+        // Should return a new Matrix that is equal to a - b
+        if(a.rows !== b.rows && a.cols !== b.cols) {
+            console.log("Sizes do not match.");
+            return;
+        }
+        let result = new Matrix(a.rows, b.cols);
+        for(let i = 0; i < a.rows; i++) {
+            for(let j = 0; j < b.cols; j++) {
+                result.data[i][j] = a.data[i][j] - b.data[i][j];
+            }
+        }
+        return result;
     }
 }
