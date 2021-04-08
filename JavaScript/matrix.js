@@ -34,29 +34,35 @@ class Matrix {
     randomize() {
         for(let i = 0; i < this.rows; i++) {
             for(let j = 0; j < this.cols; j++) {
-                this.data[i][j] += Math.floor(Math.random() * 10);
+                this.data[i][j] += Math.random() * 2 - 1; // getting random numbers b/w 1 and -1
             }
         }
     }
 
     static multiply(a, b) {
-        // Matrix product
-        if(a.cols !== b.rows) {
-            console.log('Columns of A must match rows of B.');
-            return undefined;
-        }
-
-        let result = new Matrix(a.rows, b.cols);
-        for(let i = 0; i < result.rows; i++) {
-            for(let j = 0; j < result.cols; j++) {
-                let sum = 0;
-                for(let k = 0; k < a.cols; k++) {
-                    sum += a.data[i][k] * b.data[k][j];
-                }
-                result.data[i][j] = sum;
+        if(a instanceof Matrix && b instanceof Matrix) {
+            // Matrix product
+            if(a.cols !== b.rows) {
+                console.log('Columns of A must match rows of B.');
+                return undefined;
             }
+
+            let result = new Matrix(a.rows, b.cols);
+            for(let i = 0; i < result.rows; i++) {
+                for(let j = 0; j < result.cols; j++) {
+                    let sum = 0;
+                    for(let k = 0; k < a.cols; k++) {
+                        sum += a.data[i][k] * b.data[k][j];
+                    }
+                    result.data[i][j] = sum;
+                }
+            }
+            return result;
         }
-        return result;
+    console.log("Passed are not instances of Matrices!");
+    console.log("a instanceof Matrix", a instanceof Matrix);
+    console.log("b instanceof Matrix", b instanceof Matrix);
+    return;
     }
 
     multiply(n) {
@@ -90,5 +96,28 @@ class Matrix {
 
     print() {
         console.table(this.data);
+    }
+
+    static fromArray(arr) {
+        if(arr instanceof Array) {
+            let matrix = new Matrix(arr.length, 1);
+            for(let i = 0; i < arr.length; i++) {
+                matrix.data[i][0] = arr[i];
+            }
+            return matrix;
+        }
+        console.log("Can not convert this to a matrix. Perhaps not an Array.");
+        return undefined;
+    }
+
+    // This toArray function will give me back the outout in array form once acted upon a Matrix object
+    toArray() {
+        let arr = [];
+        for(let i = 0; i < this.rows; i++) {
+            for(let j = 0; j < this.cols; j++) {
+                arr.push(this.data[i][j]);
+            }
+        }
+        return arr;
     }
 }

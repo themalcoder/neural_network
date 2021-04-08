@@ -1,32 +1,13 @@
-var brain;
 
 function setup() {
-    // size(600, 400);
+    createCanvas(600, 400);
     background(0);
-    brain = new NeuralNetwork(3, 3, 1);
+    let nn = new NeuralNetwork(2, 2, 1);
 
-    let a = new Matrix(2, 2);
-    a.randomize();
-    a.print();
+    let input = [1, 2];
+    let output = nn.feedForward(input);
+    console.log(output);
 
-
-    function doubleIt(x) {
-        return x * 2;
-    }
-
-    a.map(doubleIt);
-    a.print();
-    // let b = Matrix.transpose(a);
-
-    // b.print();
-
-    // let c = Matrix.multiply(a, b);
-    // c.print();
-    
-    // c.multiply(2);
-    // c.print();
-    
-    
 }
 
 function draw() {
