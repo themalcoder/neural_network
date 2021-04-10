@@ -5,3 +5,4 @@ jsconfig.json
 /Python/__pycache__/*
 /JavaScript/NOC/*
 *.png
+*.bin

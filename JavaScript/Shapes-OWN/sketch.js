@@ -1,32 +1,85 @@
 let circles = [];
+let circlesData = {};
+
 let squares = [];
+let squaresData = {};
+
 let triangles = [];
+let trianglesData = {};
 
-let imagesLength = 150;
+let pixelData = [];
+let completeData = [];
 
-let canvas;
-let resultsDiv;
+let imagesLength = 500;
+let threshold = Math.floor(0.8 * imagesLength);
+let trainingLength = threshold;
+let trainingData = [];
+let testingLength = imagesLength - trainingLength;
+let testingData = [];
 
 let inputImage;
 
+let canvas;
+let resultsDiv;
 let clearButton;
 
+const CIRCLE = 0;
+const SQUARE = 1;
+const TRIANGLE = 2;
+
 function preload() {
+  print("Loading data!");
   for (let i = 0; i < imagesLength; i++) {
     let index = nf(i + 1, 4, 0);
     circles[i] = loadImage(`data/circle${index}.png`);
     squares[i] = loadImage(`data/square${index}.png`);
     triangles[i] = loadImage(`data/triangle${index}.png`);
   }
+  console.log("Data loaded!");
 }
 
 let nn;
 
+function dataPreset(data, label) {
+  // let tempData = [];
+  for(let i = 0; i < data.length; i++) {
+    data[i].loadPixels();
+    for(let j = 0; j < 784; j++) {
+      pixelData.push((data[i].pixels[j*4] / 255)); // normalizing the data, here only.
+    }
+    let targets = [0, 0, 0];
+    targets[label] = 1;
+    completeData.push({data: pixelData, target: targets});
+    pixelData = [];
+    // return tempData;
+  }
+}
+
+function prepareData(catagory, label) {
+  catagory.training = [];
+  catagory.testing = [];
+  let offset = 0;
+  if(label === 0) {
+    offset = imagesLength * 0;
+  } else if(label === 1) {
+    offset = imagesLength * 1;
+  } else if(label === 2) {
+    offset = imagesLength * 2;
+  }
+
+  for(let i = 0; i < imagesLength; i++) {
+    if(i < trainingLength) {
+      catagory.training.push(completeData[i + offset]);
+    } else {
+      catagory.testing.push(completeData[i + offset]);
+    }
+  }
+}
+
 function setup() {
-  canvas = createCanvas(400, 400);
-  inputImage = createGraphics(64, 64);
-  
   background(255);
+  canvas = createCanvas(400, 400);
+  inputImage = createGraphics(28, 28);
   clearButton = createButton('clear');
   clearButton.mousePressed(function() {
     background(255);
@@ -34,27 +87,45 @@ function setup() {
 
   resultsDiv = createDiv('Loading Model');
 
-  nn = NeuralNetwork(, 128, 3);
+  // Preparing data
+  dataPreset(circles, CIRCLE);
+  dataPreset(squares, SQUARE);
+  dataPreset(triangles, TRIANGLE);
+
+  prepareData(circlesData, CIRCLE);
+  prepareData(squaresData, SQUARE);
+  prepareData(trianglesData, TRIANGLE);
+
+  trainingData = trainingData.concat(circlesData.training);
+  trainingData = trainingData.concat(squaresData.training);
+  trainingData = trainingData.concat(trianglesData.training);
   
+  
+  // Randomizing the data
+  shuffle(trainingData, true);
+  // console.log(trainingData);
+  
+  testingData = testingData.concat(circlesData.testing);
+  testingData = testingData.concat(squaresData.testing);
+  testingData = testingData.concat(trianglesData.testing);
+  shuffle(testingData, true);
+  // Making the Neural Network
+  nn = new NeuralNetwork(784, 64, 3); //28 * 28 dimensions
+
   trainData();
 }
 
-function trainData() {
-  // adding data in ml5
-  for(let i = 0; i < circles.length; i++) {
-    let input = {image: circles[i]};
-    let target = {label: "circle"};
-    // nn.addData(input, target);
-    
-    input = {image: squares[i]};
-    target = {label: "square"};
-    // nn.addData(input, target);
-    
-    input = {image: triangles[i]};
-    target = {label: "triangle"};
-    // nn.addData(input, target);
+function trainData(epochs = 1) {
+  console.log(`Training for ${epochs} epochs!`);
+  for(let e = 0; e < epochs; e++) {
+    for(let i = 0; i < trainData.length; i++) {
+      let input = trainingData[i].data;
+      let target = trainingData[i].target;
+      nn.train(input, target);
+    }
+    console.log(`Epoch : ${e + 1}`);
   }
-  nn.train(input, target);
+  console.log('Training done!');
 }
 
 
@@ -80,12 +151,12 @@ function classifyImage() {
   inputImage.copy(canvas, 0, 0, width, height, 0, 0, 64, 64);
   // image(inputImage, 0, 0);
 
-  nn.feedForward(inputImage);
+  // nn.feedForward(inputImage);
 }
 
-function draw() {
-  if(mouseIsPressed) {
-    strokeWeight(8);
-    line(mouseX, mouseY, pmouseX, pmouseY);
-  }
-}
+// function draw() {
+//   if(mouseIsPressed) {
+//     strokeWeight(8);
+//     line(mouseX, mouseY, pmouseX, pmouseY);
+//   }
+// }
