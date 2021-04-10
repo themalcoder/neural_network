@@ -4,3 +4,4 @@ jsconfig.json
 *ubyte
 /Python/__pycache__/*
 /JavaScript/NOC/*
+*.png
