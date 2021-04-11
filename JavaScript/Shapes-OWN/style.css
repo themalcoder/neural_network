@@ -8,3 +8,8 @@ html, body {
 canvas {
   display: block;
 }
+
+button {
+  font-size: 24pt;
+  margin: 10px;  
+}

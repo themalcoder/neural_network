@@ -84,29 +84,26 @@ function finishedTraining() {
   console.log("Finished training!");
   shapeClassifier.save();
 }
-
-// function mousePressed() {
-  // }
   
-  function gotResults(err, results) {
-    if(err) {
-      console.error(err);
-      return;
-    }
-
-    let label = results[0].label;
-    let confidence = nf(100 * results[0].confidence, 2, 0);
-    resultsDiv.html(`${label} ${confidence}%`);
-    // console.log(results);
-    classifyImage();
+function gotResults(err, results) {
+  if(err) {
+    console.error(err);
+    return;
   }
-  
-  function classifyImage() {
-    inputImage = createGraphics(64, 64);
-    inputImage.copy(canvas, 0, 0, width, height, 0, 0, 64, 64);
-    // image(inputImage, 0, 0);
 
-    shapeClassifier.classify({image: inputImage}, gotResults);
+  let label = results[0].label;
+  let confidence = nf(100 * results[0].confidence, 2, 0);
+  resultsDiv.html(`${label} ${confidence}%`);
+  // console.log(results);
+  classifyImage();
+}
+
+function classifyImage() {
+  inputImage = createGraphics(64, 64);
+  inputImage.copy(canvas, 0, 0, width, height, 0, 0, 64, 64);
+  // image(inputImage, 0, 0);
+
+  shapeClassifier.classify({image: inputImage}, gotResults);
 }
 
 function draw() {
