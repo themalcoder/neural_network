@@ -2,7 +2,7 @@ let circles = [];
 let squares = [];
 let triangles = [];
 
-let imagesLength = 150;
+let imagesLength = 1000;
 
 let canvas;
 let resultsDiv;
