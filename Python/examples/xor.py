@@ -40,7 +40,7 @@ def main():
     # # List of all the posible inputs
     tests = [[0, 0], [0, 1], [1, 0], [1, 1]]
     print()
-    model = nn.save_model('xor-data')
+    # model = nn.save_model('xor-data')
     print()
 
     # nn = nn.load_model('xor-data') # Testing loading of the pre-trained model
