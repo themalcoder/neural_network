@@ -1,4 +1,4 @@
-# Neural Network From Scractch
+# Neural Network From Scratch
 
 This is the implementation of neural networks from scratch. Right now I am not sure what or how this gonna proceed in the future. But I am planning to impelement it in JavaScript, Java and Python.
 
